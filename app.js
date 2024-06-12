@@ -107,6 +107,11 @@ app.get('/setSession', (req, res) => {
   });
   
 
+
+  //tset
+
+  
+
 // 세션에 sessionId 설정
 app.use((req, res, next) => {
     if (!req.session.sessionId) {
