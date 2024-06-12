@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modify Inquiry</title>
+</head>
+<body>
+  <h1>Modify Inquiry</h1>
+  <form id="modifyInquiryForm">
+    <input type="hidden" id="inquiry_id" name="inquiry_id" value="1"> <!-- inquiry_id 값을 여기에 설정 -->
+    <label for="subject">Subject:</label>
+    <input type="text" id="subject" name="subject" required><br><br>
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" rows="4" cols="50" required></textarea><br><br>
+    <button type="submit">Modify Inquiry</button>
+  </form>
+
+  <script>
+    document.getElementById('modifyInquiryForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const inquiryData = Object.fromEntries(formData.entries());
+      try {
+        const response = await fetch('/orders/modify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(inquiryData)
+        });
+        if (response.ok) {
+          alert('Inquiry modified successfully');
+        } else {
+          throw new Error('Failed to modify inquiry');
+        }
+      } catch (error) {
+        console.error('Error modifying inquiry:', error);
+        alert('Failed to modify inquiry');
+      }
+    });
+  </script>
+</body>
+</html>

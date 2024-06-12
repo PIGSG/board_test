@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+</head>
+<body>
+    <h1>Shopping Cart</h1>
+    <div id="cart-items">
+        <!-- 장바구니 항목이 여기에 동적으로 로드됩니다 -->
+    </div>
+    <button onclick="checkout()">Proceed to Checkout</button>
+    <script>
+        async function loadCart() {
+            const response = await fetch('/cart');
+            const cartItems = await response.json();
+            const cartDiv = document.getElementById('cart-items');
+            cartDiv.innerHTML = '';
+            cartItems.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.innerHTML = `
+                    <h2>${item.name}</h2>
+                    <p>Price: $${item.price}</p>
+                    <label for="quantity-${item.product_id}">Quantity:</label>
+                    <input type="number" id="quantity-${item.product_id}" value="${item.quantity}" min="1" onchange="updateQuantity(${item.product_id}, this.value)">
+                `;
+                cartDiv.appendChild(itemDiv);
+            });
+        }
+
+        async function updateQuantity(productId, quantity) {
+            await fetch(`/cart/${productId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ quantity })
+            });
+        }
+
+        function checkout() {
+            window.location.href = '/checkout';
+        }
+
+        loadCart();
+    </script>
+</body>
+</html>

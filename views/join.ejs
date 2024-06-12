@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모여모사 : 회원가입</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 5px;
+            display: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: darkblue;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="signupForm" onsubmit="return validateForm()" action="/join" method="POST">
+        <label for="username">아이디</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="confirmPassword">비밀번호 재확인</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+        <span id="passwordError" class="error-message">비밀번호가 일치하지 않습니다.</span>
+
+        <button type="submit">가입하기</button>
+    </form>
+
+    <script>
+        async function signup() {
+            const formData = new FormData(document.getElementById('signupForm'));
+            const userData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/join', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                if (response.ok) {
+                    alert('회원가입이 완료되었습니다.');
+                    window.location.href = '카테고리.html';
+                } else {
+                    const errorMessage = await response.text();
+                    alert(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('회원가입 중 오류가 발생했습니다.');
+            }
+        }
+
+        function validateForm() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+            var errorSpan = document.getElementById("passwordError");
+
+            if (password !== confirmPassword) {
+                errorSpan.style.display = "block";
+                return false;
+            } else {
+                errorSpan.style.display = "none";
+                return true; // 폼을 서버로 제출하도록 true 반환
+            }
+        }
+    </script>
+</body>
+
+</html>

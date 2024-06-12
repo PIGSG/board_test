@@ -1,0 +1,29 @@
+{
+  "name": "orders",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "^3.1.10",
+    "express": "~4.16.1",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.1.0",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "moment": "^2.30.1",
+    "mongoose": "^8.4.1",
+    "morgan": "~1.9.1",
+    "mysql2": "^3.10.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "session-file-store": "^1.5.0",
+    "uuid": "^10.0.0"
+  }
+}

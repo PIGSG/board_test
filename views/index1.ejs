@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clothing Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      padding: 1rem;
+    }
+    .product {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .product img {
+      max-width: 100%;
+      height: auto;
+    }
+    .product h2 {
+      margin-top: 0;
+    }
+    .product p {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Clothing Store</h1>
+  </header>
+  <main id="productContainer">
+    <!-- Product list will be dynamically added here. -->
+  </main>
+
+  <script>
+    // 임시로 로그인 처리
+    async function login() {
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+        });
+        if (!response.ok) {
+          throw new Error('Failed to log in');
+        }
+        const data = await response.json();
+        console.log('Logged in as user:', data.userId);
+      } catch (error) {
+        console.error('Login error:', error);
+      }
+    }
+
+    login();
+
+    const products = [
+      {
+        id: 1,
+        name: "Xiaomi Notebook Pro 15",
+        image: "image/Xiaomi Notebook Pro 15.jpg",
+        description: "High-performance laptop",
+        price: 1260620
+      },
+      {
+        id: 2,
+        name: "Xiaomi Mi Notebook Pro 15.6",
+        image: "image/Xiaomi Mi Notebook Pro 15.6.jpg",
+        description: "High-performance laptop",
+        price: 1177220
+      },
+      {
+        id: 3,
+        name: "Xiaomi Gaming Laptop 15.6",
+        image: "image/Xiaomi Gaming Laptop 15.6.jpg",
+        description: "Gaming laptop",
+        price: 1500000
+      }
+    ];
+
+    const productContainer = document.getElementById('productContainer');
+    products.forEach(product => {
+      const productDiv = document.createElement('div');
+      productDiv.classList.add('product');
+      productDiv.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <h2>${product.name}</h2>
+        <p>${product.description}</p>
+        <p>Price: $${product.price}</p>
+        <button onclick="addToCart(${product.id})">Add to Cart</button>
+      `;
+      productContainer.appendChild(productDiv);
+    });
+
+    async function addToCart(productId) {
+      try {
+        const response = await fetch('/cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ productId })
+        });
+  
+        if (response.ok) {
+          alert('Product added to cart!');
+          window.location.href = "/cart";
+        } else {
+          const data = await response.json();
+          if (data.message === 'User not logged in') {
+            alert('User not logged in. Please log in to add items to the cart.');
+          } else {
+            throw new Error('Failed to add product to cart. Please try again later.');
+          }
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function getUserIdFromSession() {
+      try {
+        const response = await fetch('/getUserId'); // 서버로부터 사용자 ID 가져오기
+        const data = await response.json();
+        return data.userId; // 서버에서 받은 사용자 ID 반환
+      } catch (error) {
+        console.error('Error getting user ID:', error);
+        return null;
+      }
+    }
+  </script>
+</body>
+</html>
